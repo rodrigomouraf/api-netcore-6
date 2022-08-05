@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Data;
@@ -8,6 +9,7 @@ public class CategoryController : ControllerBase
 {
     [Route("")]
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<Category>>> Get
     (
         [FromServices] DataContext context
@@ -25,6 +27,7 @@ public class CategoryController : ControllerBase
 
     [Route("{id:int}")]
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<Category>> Get(
         int id
         ,[FromServices] DataContext context
@@ -48,6 +51,7 @@ public class CategoryController : ControllerBase
 
     [Route("")]
     [HttpPost]
+    [Authorize(Roles = "employee")]
     public async Task<ActionResult<Category>> Post(
         [FromBody] Category model,
         [FromServices] DataContext context
@@ -70,6 +74,7 @@ public class CategoryController : ControllerBase
 
     [Route("{id:int}")]
     [HttpPut]
+    [Authorize(Roles = "employee")]
     public async Task<ActionResult<Category>> Put(
         int id,
         [FromBody] Category model,
@@ -97,6 +102,7 @@ public class CategoryController : ControllerBase
 
     [Route("{id:int}")]
     [HttpDelete]
+    [Authorize(Roles = "employee")]
     public async Task<ActionResult<Category>> Delete(
         int id,
         [FromServices] DataContext context

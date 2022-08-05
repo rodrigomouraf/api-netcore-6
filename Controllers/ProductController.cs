@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Data;
@@ -13,6 +11,7 @@ namespace Shop.Controllers
     {
         [Route("")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Product>>> Get
         (
             [FromServices] DataContext context
@@ -36,6 +35,7 @@ namespace Shop.Controllers
 
         [Route("{id:int}")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<Product>> Get(
             int id
             ,[FromServices] DataContext context
@@ -64,6 +64,7 @@ namespace Shop.Controllers
 
         [Route("categories/{id:int}")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Product>>> GetByCategory(
             int id,
             [FromServices] DataContext context
@@ -93,10 +94,12 @@ namespace Shop.Controllers
 
         [Route("")]
         [HttpPost]
-        public async Task<ActionResult<Product>> Post(
-        [FromBody] Product model,
-        [FromServices] DataContext context
-    )
+        [Authorize(Roles = "employee")]
+        public async Task<ActionResult<Product>> Post
+        (
+            [FromBody] Product model,
+            [FromServices] DataContext context
+        )
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
