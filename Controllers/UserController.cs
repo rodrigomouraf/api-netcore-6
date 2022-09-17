@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Data;
 using Shop.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
 using Shop.Services;
 
 namespace Shop.Controllers
@@ -49,8 +46,12 @@ namespace Shop.Controllers
 
             try
             {
+                model.Role = "employee";
+
                 context.Users.Add(model);
                 await context.SaveChangesAsync();
+
+                model.Password = "";
                 return Ok(model);
             }
             catch
@@ -110,6 +111,7 @@ namespace Shop.Controllers
                     return NotFound(new { message = "Usuário ou senha inválido" });
 
                 var token = TokenService.GenerateToken(user);
+                user.Password = "";
                 return new
                 {
                     user,
